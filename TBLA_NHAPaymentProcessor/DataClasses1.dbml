@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NHALoanModule" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-S3FKS53\SQLEXPRESS;Initial Catalog=NHALoanModule;Integrated Security=True" SettingsObjectName="TBLA_NHAPaymentProcessor.My.MySettings" SettingsPropertyName="NHALoanModuleConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.tblAmort" Member="tblAmorts">
+    <Type Name="tblAmort">
+      <Column Name="AmortID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PaymentNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="InterestAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="PrincipalAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentMade" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="tblLoan_tblAmort" Member="tblLoan" ThisKey="LoanID" OtherKey="LoanID" Type="tblLoan" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblCash" Member="tblCashes">
+    <Type Name="tblCash">
+      <Column Name="CashID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Payment" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="DateSubmitted" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="tblCash_tblReceipt" Member="tblReceipts" ThisKey="CashID" OtherKey="CashID" Type="tblReceipt" />
+      <Association Name="tblLoan_tblCash" Member="tblLoan" ThisKey="LoanID" OtherKey="LoanID" Type="tblLoan" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblCustAcctNum" Member="tblCustAcctNums">
+    <Type Name="tblCustAcctNum">
+      <Column Name="CustAcctID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TBLAAcctID" Type="System.String" DbType="NChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="tblCustAcctNum_tblLoan" Member="tblLoans" ThisKey="CustAcctID" OtherKey="CustomerAcctID" Type="tblLoan" />
+      <Association Name="tblCustomer_tblCustAcctNum" Member="tblCustomer" ThisKey="CustomerID" OtherKey="CustomerID" Type="tblCustomer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblCustomer" Member="tblCustomers">
+    <Type Name="tblCustomer">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CustFName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CustLName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CustAddress1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CustAddress2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CustAddress3" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="tblCustomer_tblCustAcctNum" Member="tblCustAcctNums" ThisKey="CustomerID" OtherKey="CustomerID" Type="tblCustAcctNum" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblHolding" Member="tblHoldings">
+    <Type Name="tblHolding">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="Processed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="tblLoan_tblHolding" Member="tblLoan" ThisKey="LoanID" OtherKey="LoanID" Type="tblLoan" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblLoan" Member="tblLoans">
+    <Type Name="tblLoan">
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LoanIPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanPPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanRateOfInterest" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerAcctID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LoanTerm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LoanStartDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="ManualAmort" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="MonthlyInstallment" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+      <Association Name="tblLoan_tblAmort" Member="tblAmorts" ThisKey="LoanID" OtherKey="LoanID" Type="tblAmort" />
+      <Association Name="tblLoan_tblCash" Member="tblCashes" ThisKey="LoanID" OtherKey="LoanID" Type="tblCash" />
+      <Association Name="tblLoan_tblHolding" Member="tblHoldings" ThisKey="LoanID" OtherKey="LoanID" Type="tblHolding" />
+      <Association Name="tblLoan_tblPayment" Member="tblPayments" ThisKey="LoanID" OtherKey="LoanID" Type="tblPayment" />
+      <Association Name="tblCustAcctNum_tblLoan" Member="tblCustAcctNum" ThisKey="CustomerAcctID" OtherKey="CustAcctID" Type="tblCustAcctNum" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblPayment" Member="tblPayments">
+    <Type Name="tblPayment">
+      <Column Name="PaymentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PaymentDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentAmount" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TowardInterest" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="TowardPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="CompletePayment" Type="System.Char" DbType="NChar(1)" CanBeNull="true" />
+      <Column Name="CashID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="tblLoan_tblPayment" Member="tblLoan" ThisKey="LoanID" OtherKey="LoanID" Type="tblLoan" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblReceipt" Member="tblReceipts">
+    <Type Name="tblReceipt">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CashID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Association Name="tblCash_tblReceipt" Member="tblCash" ThisKey="CashID" OtherKey="CashID" Type="tblCash" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomerAmort" Member="CustomerAmorts">
+    <Type Name="CustomerAmort">
+      <Column Name="PaymentNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="InterestAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="PrincipalAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CustFName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CustLName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomersLoan" Member="CustomersLoans">
+    <Type Name="CustomersLoan">
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TBLAAcctID" Type="System.String" DbType="NChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CustFName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CustLName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ManualAmort" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FullNameCust" Member="FullNameCusts">
+    <Type Name="FullNameCust">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FullName" Type="System.String" DbType="NVarChar(101)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.SearchLoansByAccountNum" Method="SearchLoansByAccountNum" IsComposable="true">
+    <Parameter Name="AccNum" Parameter="accNum" Type="System.String" DbType="NVarChar(15)" />
+    <ElementType Name="SearchLoansByAccountNumResult">
+      <Column Name="loanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LoanIPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanRateOfInterest" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="LoanTerm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MonthlyInstallment" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SearchCustomerByAccNum" Method="SearchCustomerByAccNum" IsComposable="true">
+    <Parameter Name="AccNum" Parameter="accNum" Type="System.String" DbType="NVarChar(15)" />
+    <ElementType Name="SearchCustomerByAccNumResult">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FullName" Type="System.String" DbType="NVarChar(101)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SearchCustomerByLastName" Method="SearchCustomerByLastName" IsComposable="true">
+    <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SearchCustomerByLastNameResult">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FullName" Type="System.String" DbType="NVarChar(101)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SearchCustomerByFirstName" Method="SearchCustomerByFirstName" IsComposable="true">
+    <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="NVarChar(1)" />
+    <ElementType Name="SearchCustomerByFirstNameResult">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FullName" Type="System.String" DbType="NVarChar(101)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.CreeightCustomer" Method="CreeightCustomer">
+    <Parameter Name="CustFName" Parameter="custFName" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="CustLName" Parameter="custLName" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="addr1" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="addr2" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="addr3" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.ReturnLastCust" Method="ReturnLastCust" IsComposable="true">
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.DCustFullname" Method="DCustFullname" IsComposable="true">
+    <Parameter Name="CustID" Parameter="custID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.String" />
+  </Function>
+  <Function Name="dbo.InsertIntoCash" Method="InsertIntoCash">
+    <Parameter Name="Payment" Parameter="payment" Type="System.Double" DbType="Float" />
+    <Parameter Name="DateSubmitted" Parameter="dateSubmitted" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.ReturnCashID" Method="ReturnCashID" IsComposable="true">
+    <Parameter Name="PaymentAmount" Parameter="paymentAmount" Type="System.Double" DbType="Float" />
+    <Parameter Name="paymentDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.CreateAmort" Method="CreateAmort">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PaymentID" Parameter="paymentID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PaymentAmount" Parameter="paymentAmount" Type="System.Double" DbType="Float" />
+    <Parameter Name="interestAmount" Type="System.Double" DbType="Float" />
+    <Parameter Name="PrincipalAmount" Parameter="principalAmount" Type="System.Double" DbType="Float" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SumOnHold" Method="SumOnHold" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.ReturnNextPayment" Method="ReturnNextPayment" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.InsertDataIntoTable" Method="InsertDataIntoTable">
+    <Parameter Name="PDate" Parameter="pDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="PAmount" Parameter="pAmount" Type="System.Double" DbType="Float" />
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="InterestAmount" Parameter="interestAmount" Type="System.Double" DbType="Float" />
+    <Parameter Name="PrincipalAmount" Parameter="principalAmount" Type="System.Double" DbType="Float" />
+    <Parameter Name="CashID" Parameter="cashID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Re2rnInterest" Method="Re2rnInterest" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="AmortPosition" Parameter="amortPosition" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Double" />
+  </Function>
+  <Function Name="dbo.Re2rnPrincipal" Method="Re2rnPrincipal" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="AmortPosition" Parameter="amortPosition" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Double" />
+  </Function>
+  <Function Name="dbo.MarkAmortPaid" Method="MarkAmortPaid">
+    <Parameter Name="AmortID" Parameter="amortID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.ReturnNextAmortID" Method="ReturnNextAmortID" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.LoansMRC" Method="LoansMRC" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Double" />
+  </Function>
+  <Function Name="dbo.ReturnLoanAmorts" Method="ReturnLoanAmorts" IsComposable="true">
+    <Parameter Name="loanid" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="ReturnLoanAmortsResult">
+      <Column Name="AmortID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="InterestAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="PrincipalAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentMade" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.ReturnLoanAmortsByID" Method="ReturnLoanAmortsByID" IsComposable="true">
+    <Parameter Name="loanid" Type="System.Int32" DbType="Int" />
+    <ElementType Name="ReturnLoanAmortsByIDResult">
+      <Column Name="AmortID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="InterestAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="PrincipalAmount" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentMade" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.ReturnCustomerByID" Method="ReturnCustomerByID" IsComposable="true">
+    <Parameter Name="CustID" Parameter="custID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="ReturnCustomerByIDResult">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FullName" Type="System.String" DbType="NVarChar(101)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.CreateLoan" Method="CreateLoan">
+    <Parameter Name="LoanPrincipal" Parameter="loanPrincipal" Type="System.Double" DbType="Float" />
+    <Parameter Name="aPR" Type="System.Double" DbType="Float" />
+    <Parameter Name="term" Type="System.Int32" DbType="Int" />
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="mRC" Type="System.Double" DbType="Float" />
+    <Parameter Name="CustAccNum" Parameter="custAccNum" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ManualAmort" Parameter="manualAmort" Type="System.Boolean" DbType="Bit" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.CreateLoanAccountNumber" Method="CreateLoanAccountNumber">
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="AccNo" Parameter="accNo" Type="System.String" DbType="NVarChar(20)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.ReturnLastLoanACCNum" Method="ReturnLastLoanACCNum" IsComposable="true">
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.CustomersLoans" Method="CustomersLoans1" IsComposable="true">
+    <Parameter Name="CustID" Parameter="custID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="CustomersLoansResult">
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LoanIPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanPPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanRateOfInterest" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerAcctID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LoanTerm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LoanStartDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="ManualAmort" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="MonthlyInstallment" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.LoansPayments" Method="LoansPayments" IsComposable="true">
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="LoansPaymentsResult">
+      <Column Name="PaymentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentAmount" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LoanID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TowardInterest" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="TowardPrincipal" Type="System.Decimal" DbType="Decimal(20,2) NOT NULL" CanBeNull="false" />
+      <Column Name="CompletePayment" Type="System.Char" DbType="NChar(1)" CanBeNull="true" />
+      <Column Name="CashID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.InsertIntoHolding" Method="InsertIntoHolding">
+    <Parameter Name="Amt" Parameter="amt" Type="System.Double" DbType="Float" />
+    <Parameter Name="LoanID" Parameter="loanID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>
